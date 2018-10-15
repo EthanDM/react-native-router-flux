@@ -25,6 +25,7 @@ import LightboxRenderer from './LightboxRenderer';
 import _drawerImage from '../images/menu_burger.png';
 import Scene from './Scene';
 import { getActiveState, getParent, getRouteNameByKey } from './State';
+import isEqual from 'lodash.isequal';
 import Modal from './Modal';
 import Lightbox from './Lightbox';
 import Drawer from './Drawer';
@@ -940,6 +941,7 @@ class NavigationStore {
   };
 
   pop = ({ timeout, key, ...params } = {}) => {
+    const previous = getActiveState(this.state);
     const res = filterParam(params);
     if (timeout) {
       setTimeout(() => this.pop(params), timeout);
@@ -949,7 +951,7 @@ class NavigationStore {
         this.refresh(res.refresh);
       }
     }
-    return true;
+    return !isEqual(previous, getActiveState(this.state));;
   };
 
   popTo = (routeName, data) => {
